@@ -167,7 +167,10 @@
   }
   .stat-box .big{font-family:'Cinzel',serif;font-size:28px;color:var(--paper);}
   .stat-box .cap{font-family:'Oswald',sans-serif;font-size:9.5px;letter-spacing:.08em;color:var(--brass);text-transform:uppercase;margin-top:2px;}
-  .stat-box input.bignum{background:transparent;color:var(--paper);font-family:'Cinzel',serif;font-size:26px;text-align:center;border:none;box-shadow:none;padding:0;}
+  .stat-box input.bignum{background:transparent;color:var(--paper);font-family:'Cinzel',serif;font-size:26px;text-align:center;border:none;box-shadow:none;padding:0;width:60px;}
+  .stat-adjust{display:flex;align-items:center;justify-content:center;gap:6px;}
+  .statbtn{background:none;border:1px solid var(--brass-dim);color:var(--brass);width:24px;height:24px;padding:0;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;}
+  .statbtn:hover{background:var(--blood);color:var(--paper);border-color:var(--blood-brt);}
   .stat-box input.smallnum{background:transparent;color:var(--text-lo);font-size:12px;text-align:center;border:none;box-shadow:none;padding:0;width:60px;margin:0 auto;}
 
   table{width:100%;border-collapse:collapse;font-size:13px;}
@@ -304,15 +307,30 @@
       <div class="panel">
         <div class="row3">
           <div class="stat-box">
-            <input class="bignum" type="number" id="pv" value="0"><div class="cap">Pontos de Vida</div>
+            <div class="stat-adjust">
+              <button type="button" class="statbtn" onclick="adjustStat('pv',-1)">−</button>
+              <input class="bignum" type="number" id="pv" value="0">
+              <button type="button" class="statbtn" onclick="adjustStat('pv',1)">+</button>
+            </div>
+            <div class="cap">Pontos de Vida</div>
             <input class="smallnum" type="number" id="pvMod" placeholder="mod" value="0">
           </div>
           <div class="stat-box">
-            <input class="bignum" type="number" id="pe" value="0"><div class="cap">Pontos de Esforço</div>
+            <div class="stat-adjust">
+              <button type="button" class="statbtn" onclick="adjustStat('pe',-1)">−</button>
+              <input class="bignum" type="number" id="pe" value="0">
+              <button type="button" class="statbtn" onclick="adjustStat('pe',1)">+</button>
+            </div>
+            <div class="cap">Pontos de Esforço</div>
             <input class="smallnum" type="number" id="peMod" placeholder="mod" value="0">
           </div>
           <div class="stat-box">
-            <input class="bignum" type="number" id="san" value="0"><div class="cap">Sanidade</div>
+            <div class="stat-adjust">
+              <button type="button" class="statbtn" onclick="adjustStat('san',-1)">−</button>
+              <input class="bignum" type="number" id="san" value="0">
+              <button type="button" class="statbtn" onclick="adjustStat('san',1)">+</button>
+            </div>
+            <div class="cap">Sanidade</div>
             <input class="smallnum" type="number" id="sanMod" placeholder="mod" value="0">
           </div>
         </div>
@@ -500,6 +518,12 @@ function recalc(){
   document.getElementById('defesaOut').textContent = def;
 }
 function num(id){ const v = parseFloat(document.getElementById(id).value); return isNaN(v)?0:v; }
+function adjustStat(id, delta){
+  const el = document.getElementById(id);
+  const v = Math.max(0, num(id) + delta);
+  el.value = v;
+  el.dispatchEvent(new Event('input', {bubbles:true}));
+}
 
 /* ---------- dynamic rows ---------- */
 function addRow(tableId, values){
