@@ -21,7 +21,7 @@
     --shadow: 0 8px 24px rgba(0,0,0,.5);
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden;}
   body{
     background:
       radial-gradient(1200px 600px at 20% -10%, #241f16 0%, transparent 60%),
@@ -30,11 +30,12 @@
     color:var(--paper);
     font-family:'EB Garamond', serif;
     padding:28px 14px 80px;
+    width:100%;
   }
   @media(max-width:600px){
     body{padding:16px 10px 60px;}
   }
-  .wrap{max-width:1280px;margin:0 auto;}
+  .wrap{max-width:1280px;margin:0 auto;width:100%;}
 
   /* ---- torn brush banner ---- */
   .banner{
@@ -89,8 +90,9 @@
     .save-status{flex-basis:100%;}
   }
 
-  .grid-main{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;}
-  @media(max-width:980px){.grid-main{grid-template-columns:1fr;}}
+  .grid-main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start;}
+  .grid-main > div{min-width:0;}
+  @media(max-width:980px){.grid-main{grid-template-columns:minmax(0,1fr);}}
 
   .panel{
     background:linear-gradient(180deg,var(--panel),var(--panel-2));
@@ -118,15 +120,15 @@
   }
   input:focus, textarea:focus, select:focus{outline:2px solid var(--blood-brt);}
   .field{margin-bottom:12px;}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-  .row4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;}
+  .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;}
+  .row3{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:10px;}
+  .row4{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:10px;}
   @media(max-width:420px){
-    .row3{grid-template-columns:1fr 1fr;}
-    .row4{grid-template-columns:1fr 1fr;}
+    .row3{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
+    .row4{grid-template-columns:minmax(0,1fr) minmax(0,1fr);}
   }
   @media(max-width:340px){
-    .row2, .row3, .row4{grid-template-columns:1fr;}
+    .row2, .row3, .row4{grid-template-columns:minmax(0,1fr);}
   }
 
   /* ---- attribute pentagon ---- */
@@ -152,12 +154,12 @@
   .hex.int{top:34%;right:2%;}
   .hex.pre{bottom:0;left:16%;}
   .hex.vig{bottom:0;right:16%;}
-  @media(max-width:380px){
-    .pentagon{width:260px;height:244px;}
-    .pentagon .core{width:88px;height:88px;font-size:9px;}
-    .hex{width:80px;height:72px;}
-    .hex input{width:38px;font-size:17px;}
-    .hex .lab{font-size:9.5px;}
+  @media(max-width:460px){
+    .pentagon{width:250px;height:234px;}
+    .pentagon .core{width:84px;height:84px;font-size:9px;}
+    .hex{width:76px;height:68px;}
+    .hex input{width:36px;font-size:16px;}
+    .hex .lab{font-size:9px;}
   }
 
   .stat-box{
@@ -201,8 +203,8 @@
   .full{grid-column:1/-1;}
 
   textarea{min-height:70px;resize:vertical;}
-  .desc-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  @media(max-width:700px){.desc-grid{grid-template-columns:1fr;}}
+  .desc-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;}
+  @media(max-width:700px){.desc-grid{grid-template-columns:minmax(0,1fr);}}
 
   .footer-note{
     text-align:center;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.08em;
@@ -228,6 +230,24 @@
     .skills-wrap{max-height:none;overflow:visible;}
     .table-scroll{overflow:visible;}
     .table-scroll table{min-width:0;}
+  }
+
+  /* ---- overall compact scale for phones ---- */
+  @media(max-width:480px){
+    h1.title{font-size:clamp(22px,8vw,32px);}
+    .subtitle{letter-spacing:.2em;font-size:10px;}
+    .banner{font-size:12px;padding:10px 16px 14px;margin:20px 0 12px;}
+    .banner.small{font-size:11px;padding:8px 14px 12px;}
+    .stat-box{padding:8px 6px;}
+    .stat-box .big{font-size:22px;}
+    .stat-box input.bignum{font-size:20px;}
+    .stat-box .cap{font-size:8.5px;}
+    table{font-size:12px;}
+    th{font-size:9px;padding:4px 3px;}
+    td{padding:3px;}
+    label{font-size:10px;}
+    input[type=text], input[type=number], textarea, select{font-size:14px;padding:6px 8px;}
+    .locked{font-size:10.5px;}
   }
 </style>
 </head>

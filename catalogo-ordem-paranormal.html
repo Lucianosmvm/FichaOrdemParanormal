@@ -14,16 +14,17 @@
     --shadow: 0 8px 24px rgba(0,0,0,.5);
   }
   *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
+  html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden;}
   body{
     background:
       radial-gradient(1200px 600px at 20% -10%, #241f16 0%, transparent 60%),
       radial-gradient(1200px 700px at 100% 10%, #1c1712 0%, transparent 55%),
       var(--ink);
     color:var(--paper); font-family:'EB Garamond', serif; padding:28px 14px 80px;
+    width:100%;
   }
   @media(max-width:600px){ body{padding:16px 10px 60px;} }
-  .wrap{max-width:1100px;margin:0 auto;}
+  .wrap{max-width:1100px;margin:0 auto;width:100%;}
   .banner{
     position:relative; background:#0a0908; color:var(--brass);
     font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.14em;
@@ -102,6 +103,17 @@
   .footer-note{
     text-align:center;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.08em;
     color:#5c5443;margin-top:30px;text-transform:uppercase;
+  }
+  @media(max-width:480px){
+    h1.title{font-size:clamp(20px,8vw,30px);}
+    .subtitle{letter-spacing:.2em;font-size:10px;}
+    .banner{font-size:12px;padding:10px 16px 14px;margin:20px 0 12px;}
+    table{font-size:12px;}
+    th{font-size:9px;padding:4px 3px;}
+    td{padding:3px;}
+    input[type=text]{font-size:13px;padding:6px 7px;}
+    .locked{font-size:10.5px;}
+    .empty-note{padding:12px;font-size:10px;}
   }
 </style>
 </head>
