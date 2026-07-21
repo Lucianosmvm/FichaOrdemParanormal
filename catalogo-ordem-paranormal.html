@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ordem Paranormal — Catálogo de Itens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Oswald:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0c0b0a; --panel:#17140f; --panel-2:#1f1b14;
+    --paper:#e9e0c9; --blood:#7a1f1f; --blood-brt:#9c2c2c;
+    --brass:#b6924f; --brass-dim:#8a713d; --text-lo:#c9bfa0;
+    --shadow: 0 8px 24px rgba(0,0,0,.5);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 20% -10%, #241f16 0%, transparent 60%),
+      radial-gradient(1200px 700px at 100% 10%, #1c1712 0%, transparent 55%),
+      var(--ink);
+    color:var(--paper); font-family:'EB Garamond', serif; padding:28px 14px 80px;
+  }
+  @media(max-width:600px){ body{padding:16px 10px 60px;} }
+  .wrap{max-width:1100px;margin:0 auto;}
+  .banner{
+    position:relative; background:#0a0908; color:var(--brass);
+    font-family:'Oswald',sans-serif; font-weight:600; letter-spacing:.14em;
+    text-transform:uppercase; padding:14px 22px 18px; margin:26px 0 14px;
+    clip-path: polygon(0% 22%,2% 4%,6% 20%,10% 2%,15% 18%,20% 3%,25% 20%,30% 2%,35% 17%,40% 3%,45% 19%,50% 2%,55% 18%,60% 3%,65% 20%,70% 2%,75% 17%,80% 3%,85% 19%,90% 2%,94% 18%,98% 4%,100% 20%,100% 82%,97% 98%,93% 80%,89% 97%,84% 82%,79% 98%,74% 81%,69% 97%,64% 82%,59% 98%,54% 81%,49% 97%,44% 82%,39% 98%,34% 81%,29% 97%,24% 82%,19% 98%,14% 81%,9% 97%,4% 80%,0% 96%);
+    font-size:14px;
+  }
+  h1.title{
+    font-family:'Cinzel',serif; font-weight:900; font-size:clamp(26px,7vw,42px);
+    letter-spacing:.03em; text-align:center; color:var(--paper); margin:0;
+    text-shadow: 0 0 24px rgba(154,44,44,.35), 0 2px 0 #000;
+  }
+  h1.title span{color:var(--blood-brt);}
+  .subtitle{
+    text-align:center;font-family:'Oswald',sans-serif;letter-spacing:.3em;
+    text-transform:uppercase;font-size:11px;color:var(--text-lo);margin-top:6px;
+  }
+  .toolbar{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:20px 0 8px;}
+  button, select.ctl{
+    font-family:'Oswald',sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;
+    background:var(--panel-2);color:var(--brass);border:1px solid var(--brass-dim);
+    padding:9px 14px;border-radius:2px;cursor:pointer;transition:.15s;
+  }
+  button:hover{background:var(--blood);color:var(--paper);border-color:var(--blood-brt);}
+  button.danger:hover{background:#3a0f0f;}
+  button.active{background:var(--blood);color:var(--paper);border-color:var(--blood-brt);}
+  .save-status{font-family:'Oswald',sans-serif;font-size:11px;color:var(--text-lo);min-width:140px;text-align:center;}
+  @media(max-width:600px){
+    .toolbar > *{flex:1 1 44%;min-width:0;}
+    .save-status{flex-basis:100%;}
+  }
+
+  .panel{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid #3a3225; box-shadow:var(--shadow); padding:18px; position:relative;
+  }
+  .panel::before{content:"";position:absolute;inset:6px;border:1px solid rgba(182,146,79,.18);pointer-events:none;}
+  @media(max-width:600px){ .panel{padding:12px;} .panel::before{inset:4px;} }
+
+  .tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+  .tab-btn{position:relative;}
+  .tab-btn .count{
+    display:inline-block;margin-left:6px;background:var(--brass-dim);color:#0c0b0a;
+    border-radius:8px;padding:0 6px;font-size:10px;
+  }
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+  @media(max-width:480px){
+    .tabs{gap:6px;}
+    .tab-btn{flex:1 1 30%;font-size:10.5px;padding:9px 6px;}
+  }
+
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .table-scroll table{min-width:560px;}
+  th{
+    font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--brass);text-align:left;padding:5px 4px;border-bottom:1px solid var(--brass-dim);
+    white-space:nowrap;
+  }
+  td{padding:3px 4px;border-bottom:1px solid #3a3225;vertical-align:middle;}
+  tr:hover td{background:rgba(182,146,79,.05);}
+  input[type=text]{
+    width:100%;background:var(--paper);color:#1b1710;border:none;
+    font-family:'EB Garamond',serif;font-size:14px;padding:6px 8px;border-radius:1px;
+    box-shadow:inset 0 0 0 1px #00000022;min-width:90px;
+  }
+  input:focus{outline:2px solid var(--blood-brt);}
+  .rowbtn{background:none;border:1px solid var(--blood);color:var(--blood-brt);padding:2px 8px;font-size:11px;}
+  .addbtn{margin-top:8px;}
+  .locked{color:#6b6250;font-style:italic;font-size:11.5px;line-height:1.5;}
+  .empty-note{
+    border:1px dashed var(--brass-dim);padding:16px;text-align:center;color:var(--text-lo);
+    font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px;
+  }
+  .footer-note{
+    text-align:center;font-family:'Oswald',sans-serif;font-size:10px;letter-spacing:.08em;
+    color:#5c5443;margin-top:30px;text-transform:uppercase;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="title">CATÁLOGO <span>DE ITENS</span></h1>
+  <div class="subtitle">Ordem Paranormal — base de dados para usar na Ficha</div>
+
+  <div class="toolbar">
+    <button onclick="doSave()">💾 Salvar neste navegador</button>
+    <button onclick="exportJSON()">⇩ Exportar catalogo.json</button>
+    <button onclick="document.getElementById('importFile').click()">⇧ Importar catalogo.json</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
+    <span class="save-status" id="saveStatus"></span>
+  </div>
+  <div class="locked" style="text-align:center;max-width:640px;margin:0 auto 10px;">
+    Depois de montar seu catálogo, clique em <b>Exportar catalogo.json</b> e publique esse arquivo na mesma pasta da Ficha de Agente (ex: no GitHub Pages) — ela busca os itens automaticamente, sem precisar importar nada na mão.
+  </div>
+
+  <div class="banner">Itens</div>
+  <div class="panel">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="armas" onclick="switchTab('armas')">Armas <span class="count" id="cnt-armas">0</span></button>
+      <button class="tab-btn" data-tab="equipamentos" onclick="switchTab('equipamentos')">Equipamentos <span class="count" id="cnt-equipamentos">0</span></button>
+      <button class="tab-btn" data-tab="rituais" onclick="switchTab('rituais')">Rituais <span class="count" id="cnt-rituais">0</span></button>
+    </div>
+
+    <!-- ARMAS -->
+    <div class="tab-panel active" id="tab-armas">
+      <div style="margin-bottom:10px;">
+        <button onclick="loadPresetArmas()">⇩ Carregar itens de referência</button>
+        <span class="locked">Valores compilados de fontes da comunidade — confira com seu livro/edição.</span>
+      </div>
+      <div class="table-scroll">
+      <table id="tblArmas">
+        <thead><tr>
+          <th style="width:18%">Nome</th><th style="width:10%">Categoria</th><th style="width:11%">Teste</th>
+          <th style="width:11%">Dano</th><th style="width:20%">Crítico/Alcance/Especial</th>
+          <th style="width:8%">Espaços</th><th style="width:10%">Custo</th><th></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+      <button class="addbtn" onclick="addRow('tblArmas',['','','','','','',''])">+ Adicionar arma</button>
+    </div>
+
+    <!-- EQUIPAMENTOS -->
+    <div class="tab-panel" id="tab-equipamentos">
+      <div class="empty-note">Categoria pronta para uso — cadastre kits, proteções, ferramentas etc. quando quiser.</div>
+      <div class="table-scroll">
+      <table id="tblEquipamentos">
+        <thead><tr>
+          <th style="width:20%">Nome</th><th style="width:14%">Categoria</th><th style="width:10%">Espaços</th>
+          <th style="width:12%">Custo</th><th>Efeito</th><th></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+      <button class="addbtn" onclick="addRow('tblEquipamentos',['','','','',''])">+ Adicionar equipamento</button>
+    </div>
+
+    <!-- RITUAIS -->
+    <div class="tab-panel" id="tab-rituais">
+      <div class="empty-note">Categoria pronta para uso — cadastre rituais e habilidades quando quiser.</div>
+      <div class="table-scroll">
+      <table id="tblRituais">
+        <thead><tr>
+          <th style="width:20%">Nome</th><th style="width:12%">Custo (PE)</th><th style="width:10%">Página</th>
+          <th>Descritivo</th><th></th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+      <button class="addbtn" onclick="addRow('tblRituais',['','','',''])">+ Adicionar ritual</button>
+    </div>
+  </div>
+
+  <div class="footer-note">Ficha não-oficial · inspirada no formato de Ordem Paranormal RPG</div>
+</div>
+
+<script>
+function switchTab(name){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector(`.tab-btn[data-tab="${name}"]`).classList.add('active');
+}
+
+function addRow(tableId, values){
+  const tbody = document.getElementById(tableId).querySelector('tbody');
+  const tr = document.createElement('tr');
+  values.forEach(v=>{
+    const td = document.createElement('td');
+    const inp = document.createElement('input');
+    inp.type='text'; inp.value=v||'';
+    td.appendChild(inp);
+    tr.appendChild(td);
+  });
+  const tdBtn = document.createElement('td');
+  const btn = document.createElement('button');
+  btn.className='rowbtn'; btn.textContent='✕';
+  btn.onclick = ()=>{ tr.remove(); updateCounts(); };
+  tdBtn.appendChild(btn);
+  tr.appendChild(tdBtn);
+  tbody.appendChild(tr);
+  updateCounts();
+}
+function readTable(tableId){
+  return [...document.getElementById(tableId).querySelectorAll('tbody tr')]
+    .map(tr=>[...tr.querySelectorAll('td input')].map(i=>i.value))
+    .filter(r=>r.some(v=>v.trim()!==''));
+}
+function loadTable(tableId, data){
+  document.getElementById(tableId).querySelector('tbody').innerHTML='';
+  (data||[]).forEach(r=>addRow(tableId, r));
+  updateCounts();
+}
+function updateCounts(){
+  document.getElementById('cnt-armas').textContent = readTable('tblArmas').length;
+  document.getElementById('cnt-equipamentos').textContent = readTable('tblEquipamentos').length;
+  document.getElementById('cnt-rituais').textContent = readTable('tblRituais').length;
+}
+
+/* referência de armas — valores compilados de fontes da comunidade, confira com seu livro */
+const PRESET_ARMAS = [
+["Faca","0","Luta","1d4","19 / Curto","1","barato"],
+["Punhal","0","Luta","1d4","x3","1","barato"],
+["Bastão","0","Luta","1d6/1d8","x2","1","barato"],
+["Machete","0","Luta","1d6","19","1","barato"],
+["Lança","0","Luta","1d6","x2 / Curto","1","barato"],
+["Machadinha","I","Luta","1d6","x3 / Curto","1","médio"],
+["Espada","I","Luta","1d8/1d10","19","1","médio"],
+["Florete","I","Luta","1d6","18","1","médio"],
+["Machado","I","Luta","1d8","x3","1","médio"],
+["Maça","I","Luta","2d4","x2","1","médio"],
+["Katana","I","Luta","1d10","19","2","alto"],
+["Marreta","I","Luta","3d4","x2","2","médio"],
+["Motosserra","I","Luta","3d6","x2","2","alto"],
+["Arco","0","Pontaria","1d6","x3 / Médio","2","barato"],
+["Arco Composto","I","Pontaria","1d10","x3 / Médio","2","médio"],
+["Balestra","I","Pontaria","1d12","19 / Médio","2","médio"],
+["Shuriken","I","Pontaria","1d4","x2 / Curto","1","barato"],
+["Pistola","I","Pontaria","1d12","18 / Curto","1","médio"],
+["Pistola Pesada","I","Pontaria","2d8","18 / Curto","1","médio"],
+["Revólver","I","Pontaria","2d6","19-x3 / Curto","1","médio"],
+["Submetralhadora","I","Pontaria","2d6","19-x3 / Curto","1","alto"],
+["Fuzil de Caça","I","Pontaria","2d8","19-x3 / Médio","2","alto"],
+["Espingarda","I","Pontaria","4d6","x3 / Curto","2","alto"],
+["Fuzil de Assalto","II","Pontaria","2d10","19-x3 / Médio","2","alto"],
+["Fuzil de Precisão","III","Pontaria","2d10","19-x3 / Longo","2","altíssimo"],
+["Colete Balístico","I","—","— (proteção)","reduz dano balístico","2","médio"],
+["Kit Médico","0","Medicina","—","—","1","barato"],
+["Lanterna","0","—","—","—","1","barato"],
+["Corda (10m)","0","—","—","—","1","barato"],
+["Algemas","0","—","—","—","1","barato"]
+];
+function loadPresetArmas(){
+  if(readTable('tblArmas').length>0 && !confirm('Isso vai ADICIONAR os itens de referência às armas já cadastradas. Continuar?')) return;
+  PRESET_ARMAS.forEach(row=>addRow('tblArmas',row));
+  doSave();
+}
+
+/* ---------- persistence ---------- */
+function status(msg){ document.getElementById('saveStatus').textContent = msg; setTimeout(()=>document.getElementById('saveStatus').textContent='',2500); }
+
+function collectCatalog(){
+  return { armas: readTable('tblArmas'), equipamentos: readTable('tblEquipamentos'), rituais: readTable('tblRituais') };
+}
+function applyCatalog(c){
+  loadTable('tblArmas', c.armas);
+  loadTable('tblEquipamentos', c.equipamentos);
+  loadTable('tblRituais', c.rituais);
+}
+
+async function doSave(){
+  try{
+    await window.storage.set('op-catalogo', JSON.stringify(collectCatalog()), false);
+    status('Salvo neste navegador');
+  }catch(e){ status('Erro ao salvar'); console.error(e); }
+}
+async function autoLoad(){
+  try{
+    const res = await window.storage.get('op-catalogo', false);
+    if(res) applyCatalog(JSON.parse(res.value));
+  }catch(e){ /* nada salvo ainda */ }
+}
+
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(collectCatalog(),null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'catalogo.json';
+  a.click();
+}
+function importJSON(ev){
+  const file = ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{ applyCatalog(JSON.parse(reader.result)); doSave(); status('Importado'); }
+    catch(e){ status('JSON inválido'); }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+
+/* ---------- init ---------- */
+autoLoad();
+document.addEventListener('input', ()=>{ clearTimeout(window.__saveT); window.__saveT = setTimeout(doSave, 800); });
+</script>
+</body>
+</html>
