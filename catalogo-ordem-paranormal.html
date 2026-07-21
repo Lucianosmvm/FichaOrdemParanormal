@@ -136,9 +136,35 @@
   <div class="banner">Itens</div>
   <div class="panel">
     <div class="tabs">
+      <button class="tab-btn" data-tab="origens" onclick="switchTab('origens')">Origens <span class="count" id="cnt-origens">0</span></button>
+      <button class="tab-btn" data-tab="classes" onclick="switchTab('classes')">Classes <span class="count" id="cnt-classes">0</span></button>
       <button class="tab-btn active" data-tab="armas" onclick="switchTab('armas')">Armas <span class="count" id="cnt-armas">0</span></button>
       <button class="tab-btn" data-tab="equipamentos" onclick="switchTab('equipamentos')">Equipamentos <span class="count" id="cnt-equipamentos">0</span></button>
-      <button class="tab-btn" data-tab="rituais" onclick="switchTab('rituais')">Rituais <span class="count" id="cnt-rituais">0</span></button>
+      <button class="tab-btn" data-tab="rituais" onclick="switchTab('rituais')">Habilidades &amp; Rituais <span class="count" id="cnt-rituais">0</span></button>
+    </div>
+
+    <!-- ORIGENS -->
+    <div class="tab-panel" id="tab-origens">
+      <div class="empty-note">Categoria pronta para uso — cadastre origens e seus benefícios.</div>
+      <div class="table-scroll">
+      <table id="tblOrigens">
+        <thead><tr><th style="width:22%">Nome</th><th>Descritivo</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+      <button class="addbtn" onclick="addRow('tblOrigens',['',''])">+ Adicionar origem</button>
+    </div>
+
+    <!-- CLASSES -->
+    <div class="tab-panel" id="tab-classes">
+      <div class="empty-note">Categoria pronta para uso — cadastre classes e seus benefícios.</div>
+      <div class="table-scroll">
+      <table id="tblClasses">
+        <thead><tr><th style="width:22%">Nome</th><th>Descritivo</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      </div>
+      <button class="addbtn" onclick="addRow('tblClasses',['',''])">+ Adicionar classe</button>
     </div>
 
     <!-- ARMAS -->
@@ -177,7 +203,7 @@
 
     <!-- RITUAIS -->
     <div class="tab-panel" id="tab-rituais">
-      <div class="empty-note">Categoria pronta para uso — cadastre rituais e habilidades quando quiser.</div>
+      <div class="empty-note">Categoria pronta para uso — cadastre habilidades e rituais quando quiser.</div>
       <div class="table-scroll">
       <table id="tblRituais">
         <thead><tr>
@@ -187,7 +213,7 @@
         <tbody></tbody>
       </table>
       </div>
-      <button class="addbtn" onclick="addRow('tblRituais',['','','',''])">+ Adicionar ritual</button>
+      <button class="addbtn" onclick="addRow('tblRituais',['','','',''])">+ Adicionar habilidade / ritual</button>
     </div>
   </div>
 
@@ -235,6 +261,8 @@ function updateCounts(){
   document.getElementById('cnt-armas').textContent = readTable('tblArmas').length;
   document.getElementById('cnt-equipamentos').textContent = readTable('tblEquipamentos').length;
   document.getElementById('cnt-rituais').textContent = readTable('tblRituais').length;
+  document.getElementById('cnt-origens').textContent = readTable('tblOrigens').length;
+  document.getElementById('cnt-classes').textContent = readTable('tblClasses').length;
 }
 
 /* referência de armas — valores compilados de fontes da comunidade, confira com seu livro */
@@ -280,12 +308,17 @@ function loadPresetArmas(){
 function status(msg){ document.getElementById('saveStatus').textContent = msg; setTimeout(()=>document.getElementById('saveStatus').textContent='',2500); }
 
 function collectCatalog(){
-  return { armas: readTable('tblArmas'), equipamentos: readTable('tblEquipamentos'), rituais: readTable('tblRituais') };
+  return {
+    armas: readTable('tblArmas'), equipamentos: readTable('tblEquipamentos'), rituais: readTable('tblRituais'),
+    origens: readTable('tblOrigens'), classes: readTable('tblClasses')
+  };
 }
 function applyCatalog(c){
   loadTable('tblArmas', c.armas);
   loadTable('tblEquipamentos', c.equipamentos);
   loadTable('tblRituais', c.rituais);
+  loadTable('tblOrigens', c.origens);
+  loadTable('tblClasses', c.classes);
 }
 
 async function doSave(){

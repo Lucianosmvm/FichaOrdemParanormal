@@ -293,8 +293,8 @@
         </div>
 
         <div class="row2">
-          <div class="field"><label>Origem</label><input type="text" id="origem" placeholder="ex: Religioso"></div>
-          <div class="field"><label>Classe</label><input type="text" id="classe" placeholder="ex: Ocultista"></div>
+          <div class="field"><label>Origem</label><div id="origemHolder"><input type="text" id="origem" placeholder="ex: Religioso"></div></div>
+          <div class="field"><label>Classe</label><div id="classeHolder"><input type="text" id="classe" placeholder="ex: Ocultista"></div></div>
         </div>
         <div class="row3">
           <div class="field"><label>NEX (%)</label><input type="number" id="nex" value="5"></div>
@@ -396,7 +396,7 @@
       <tbody></tbody>
     </table>
     </div>
-    <button class="addbtn" onclick="addRow('tblHab',['','','',''])">+ Adicionar habilidade / ritual</button>
+    <button class="addbtn" onclick="addHabRow()">+ Adicionar habilidade / ritual</button>
   </div>
 
   <!-- ================= INVENTÁRIO ================= -->
@@ -556,10 +556,14 @@ function loadTable(tableId, data){
 function toggleRoman(el){ el.classList.toggle('on'); rebuildAllNameSelects(); }
 
 /* ---------- catálogo de itens (importado de catalogo.html) ---------- */
-let CATALOG = { armas: [], equipamentos: [], rituais: [] };
+let CATALOG = { armas: [], equipamentos: [], rituais: [], origens: [], classes: [] };
 
 function catalogArmas(){ return CATALOG.armas || []; }
 function catalogEquip(){ return CATALOG.equipamentos || []; }
+function catalogRituais(){ return CATALOG.rituais || []; }
+function catalogOrigens(){ return CATALOG.origens || []; }
+function catalogClasses(){ return CATALOG.classes || []; }
+function catalogRitualNames(){ return catalogRituais().map(r=>r[0]).filter(Boolean); }
 // itens de inventário normalizados p/ [nome, categoria, espaços]
 function catalogInvItems(){
   return catalogArmas().map(r=>[r[0], r[1], r[5]])
@@ -586,10 +590,20 @@ function catalogInvNames(){
 }
 function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
+function catalogNamesForKind(kind){
+  if(kind==='ataque') return catalogArmaNames();
+  if(kind==='hab') return catalogRitualNames();
+  return catalogInvNames();
+}
+function catalogPlaceholderForKind(kind){
+  if(kind==='ataque') return '— selecionar arma —';
+  if(kind==='hab') return '— selecionar habilidade/ritual —';
+  return '— selecionar item —';
+}
 function makeNameCell(kind, nome){
   const td = document.createElement('td');
   td.className = 'name-cell';
-  const names = kind==='ataque' ? catalogArmaNames() : catalogInvNames();
+  const names = catalogNamesForKind(kind);
   if(nome && !names.includes(nome)){
     const inp = document.createElement('input');
     inp.type='text'; inp.value=nome;
@@ -597,7 +611,7 @@ function makeNameCell(kind, nome){
   } else {
     const sel = document.createElement('select');
     sel.dataset.kind = kind;
-    const placeholder = kind==='ataque' ? '— selecionar arma —' : '— selecionar item —';
+    const placeholder = catalogPlaceholderForKind(kind);
     sel.innerHTML = `<option value="">${placeholder}</option>`
       + names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('')
       + '<option value="__custom__">✎ Não está na lista (digitar)</option>';
@@ -628,6 +642,12 @@ function onNameSelect(sel){
     if(!item) return;
     if(others[0]) others[0].value = item[1]; // categoria
     if(others[1]) others[1].value = item[2]; // espaços
+  } else if(kind==='hab'){
+    const item = catalogRituais().find(r=>r[0]===sel.value);
+    if(!item) return;
+    if(others[0]) others[0].value = item[1]; // custo (PE)
+    if(others[1]) others[1].value = item[2]; // página
+    if(others[2]) others[2].value = item[3]; // descritivo
   }
 }
 function addAtaqueRow(values){
@@ -660,6 +680,33 @@ function addInvRow(values){
   tdBtn.appendChild(btn); tr.appendChild(tdBtn);
   tbody.appendChild(tr);
 }
+function addHabRow(values){
+  values = values || ['','','',''];
+  const tbody = document.getElementById('tblHab').querySelector('tbody');
+  const tr = document.createElement('tr');
+  tr.appendChild(makeNameCell('hab', values[0]));
+  [values[1],values[2],values[3]].forEach(v=>{
+    const td = document.createElement('td');
+    const inp = document.createElement('input'); inp.type='text'; inp.value=v||'';
+    td.appendChild(inp); tr.appendChild(td);
+  });
+  const tdBtn = document.createElement('td');
+  const btn = document.createElement('button'); btn.className='rowbtn'; btn.textContent='✕'; btn.onclick=()=>tr.remove();
+  tdBtn.appendChild(btn); tr.appendChild(tdBtn);
+  tbody.appendChild(tr);
+}
+function readHab(){
+  return [...document.querySelectorAll('#tblHab tbody tr')].map(tr=>{
+    const nameCell = tr.querySelector('.name-cell');
+    const nome = nameCell.querySelector('select') ? nameCell.querySelector('select').value : nameCell.querySelector('input').value;
+    const rest = [...tr.querySelectorAll('td:not(.name-cell) input')].map(i=>i.value);
+    return [nome, ...rest];
+  });
+}
+function loadHab(data){
+  document.getElementById('tblHab').querySelector('tbody').innerHTML='';
+  (data||[]).forEach(r=>addHabRow(r));
+}
 function readAtaques(){
   return [...document.querySelectorAll('#tblAtaques tbody tr')].map(tr=>{
     const nameCell = tr.querySelector('.name-cell');
@@ -685,16 +732,47 @@ function loadInv(data){
   (data||[]).forEach(r=>addInvRow(r));
 }
 function rebuildAllNameSelects(){
-  document.querySelectorAll('#tblAtaques select, #tblInv select').forEach(sel=>{
+  document.querySelectorAll('#tblAtaques select, #tblInv select, #tblHab select').forEach(sel=>{
     const kind = sel.dataset.kind;
-    const names = kind==='ataque' ? catalogArmaNames() : catalogInvNames();
-    const placeholder = kind==='ataque' ? '— selecionar arma —' : '— selecionar item —';
+    const names = catalogNamesForKind(kind);
+    const placeholder = catalogPlaceholderForKind(kind);
     const prev = sel.value;
     sel.innerHTML = `<option value="">${placeholder}</option>`
       + names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('')
       + '<option value="__custom__">✎ Não está na lista (digitar)</option>';
     if(names.includes(prev)) sel.value = prev;
   });
+  buildSimpleSelect('origem', catalogOrigens().map(r=>r[0]).filter(Boolean), 'ex: Religioso', '— selecionar origem —');
+  buildSimpleSelect('classe', catalogClasses().map(r=>r[0]).filter(Boolean), 'ex: Ocultista', '— selecionar classe —');
+}
+function buildSimpleSelect(fieldId, names, placeholderText, placeholderOption){
+  const holder = document.getElementById(fieldId+'Holder');
+  const current = document.getElementById(fieldId) ? document.getElementById(fieldId).value : '';
+  if(names.length===0 || (current && !names.includes(current))){
+    if(holder.querySelector('select') || !holder.querySelector('input')){
+      const inp = document.createElement('input');
+      inp.type='text'; inp.id=fieldId; inp.value=current; inp.placeholder=placeholderText;
+      inp.addEventListener('input', recalc);
+      holder.innerHTML=''; holder.appendChild(inp);
+    }
+    return;
+  }
+  const sel = document.createElement('select');
+  sel.id = fieldId;
+  sel.innerHTML = `<option value="">${placeholderOption}</option>`
+    + names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('')
+    + '<option value="__custom__">✎ Não está na lista (digitar)</option>';
+  sel.value = current;
+  sel.addEventListener('change', ()=>{
+    if(sel.value === '__custom__'){
+      const inp = document.createElement('input');
+      inp.type='text'; inp.id=fieldId; inp.value=''; inp.placeholder=placeholderText;
+      inp.addEventListener('input', recalc);
+      holder.innerHTML=''; holder.appendChild(inp); inp.focus();
+    }
+  });
+  sel.addEventListener('change', recalc);
+  holder.innerHTML=''; holder.appendChild(sel);
 }
 function setCatalogStatus(mode){
   const n = catalogArmas().length;
@@ -712,7 +790,7 @@ async function importCatalogFile(ev){
   reader.onload = async ()=>{
     try{
       const data = JSON.parse(reader.result);
-      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[] };
+      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[], origens: data.origens||[], classes: data.classes||[] };
       await window.storage.set('op-catalogo', reader.result, false);
       rebuildAllNameSelects();
       setCatalogStatus('manual');
@@ -728,7 +806,7 @@ async function autoLoadCatalog(){
     const res = await fetch('catalogo.json', {cache:'no-store'});
     if(res.ok){
       const data = await res.json();
-      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[] };
+      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[], origens: data.origens||[], classes: data.classes||[] };
       rebuildAllNameSelects();
       setCatalogStatus('auto');
       return;
@@ -739,7 +817,7 @@ async function autoLoadCatalog(){
     const cached = await window.storage.get('op-catalogo', false);
     if(cached){
       const data = JSON.parse(cached.value);
-      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[] };
+      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[], origens: data.origens||[], classes: data.classes||[] };
       rebuildAllNameSelects();
       setCatalogStatus('cache');
       return;
@@ -761,7 +839,7 @@ function collectState(){
   SIMPLE_IDS.forEach(id=> s[id] = document.getElementById(id).value);
   s.skills = SKILLS.map((sk,i)=>({tr:document.getElementById('sk_tr_'+i).value, out:document.getElementById('sk_out_'+i).value}));
   s.ataques = readAtaques();
-  s.habilidades = readTable('tblHab');
+  s.habilidades = readHab();
   s.inventario = readInv();
   s.romans = [...document.querySelectorAll('.roman-box')].map(b=>b.classList.contains('on'));
   return s;
@@ -775,7 +853,7 @@ function applyState(s){
     }
   });
   loadAtaques(s.ataques);
-  loadTable('tblHab', s.habilidades);
+  loadHab(s.habilidades);
   loadInv(s.inventario);
   rebuildAllNameSelects();
   const romanBoxes = [...document.querySelectorAll('.roman-box')];
