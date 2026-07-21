@@ -344,7 +344,7 @@
           <tbody></tbody>
         </table>
         </div>
-        <button class="addbtn" onclick="addAtaqueRow()">+ Adicionar ataque (selecionar do catálogo)</button>
+        <button class="addbtn" onclick="addAtaqueRow()">+ Adicionar ataque (selecionar arma)</button>
       </div>
     </div>
 
@@ -362,21 +362,6 @@
         </div>
         <div class="locked" style="margin-top:8px;">Total = d20 + Atributo + Bônus de treino + Outros. * = só pode ser testada se treinada. + = penalidade por carga.</div>
       </div>
-    </div>
-  </div>
-
-  <!-- ================= CATÁLOGO DE ITENS (arquivo externo) ================= -->
-  <div class="banner">Catálogo de Itens</div>
-  <div class="panel full">
-    <div class="locked" style="margin-bottom:10px;">
-      A ficha busca os itens automaticamente do arquivo <b>catalogo.json</b> (exportado pelo catalogo.html)
-      quando ele está publicado na mesma pasta, como no GitHub Pages. Ninguém precisa importar nada na mão.
-    </div>
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
-      <button onclick="autoLoadCatalog()">🔄 Recarregar catálogo</button>
-      <button onclick="document.getElementById('catalogFile').click()">⇧ Importar catalogo.json manualmente</button>
-      <input type="file" id="catalogFile" accept="application/json" style="display:none" onchange="importCatalogFile(event)">
-      <span class="locked" id="catalogStatus">Carregando catálogo…</span>
     </div>
   </div>
 
@@ -544,22 +529,43 @@ function loadTable(tableId, data){
   (data||[]).forEach(r=>addRow(tableId, r));
 }
 
-function toggleRoman(el){ el.classList.toggle('on'); }
+function toggleRoman(el){ el.classList.toggle('on'); rebuildAllNameSelects(); }
 
 /* ---------- catálogo de itens (importado de catalogo.html) ---------- */
 let CATALOG = { armas: [], equipamentos: [], rituais: [] };
 
 function catalogArmas(){ return CATALOG.armas || []; }
-function catalogNames(){
-  // por enquanto só armas alimentam os seletores de Ataques/Inventário
-  return catalogArmas().map(r=>r[0]).filter(Boolean);
+function catalogEquip(){ return CATALOG.equipamentos || []; }
+// itens de inventário normalizados p/ [nome, categoria, espaços]
+function catalogInvItems(){
+  return catalogArmas().map(r=>[r[0], r[1], r[5]])
+    .concat(catalogEquip().map(r=>[r[0], r[1], r[2]]));
+}
+function categoriaTierMax(){
+  let max = 0;
+  document.querySelectorAll('.roman-box.on').forEach(el=>{
+    const n = +el.dataset.n; if(n > max) max = n;
+  });
+  return max;
+}
+function categoriaRank(cat){
+  const map = { '':0, '0':0, 'I':1, 'II':2, 'III':3, 'IV':4 };
+  return map[(cat||'').trim()] ?? 0;
+}
+function catalogArmaNames(){
+  const max = categoriaTierMax();
+  return catalogArmas().filter(r=>categoriaRank(r[1])<=max).map(r=>r[0]).filter(Boolean);
+}
+function catalogInvNames(){
+  const max = categoriaTierMax();
+  return catalogInvItems().filter(r=>categoriaRank(r[1])<=max).map(r=>r[0]).filter(Boolean);
 }
 function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
 
 function makeNameCell(kind, nome){
   const td = document.createElement('td');
   td.className = 'name-cell';
-  const names = catalogNames();
+  const names = kind==='ataque' ? catalogArmaNames() : catalogInvNames();
   if(nome && !names.includes(nome)){
     const inp = document.createElement('input');
     inp.type='text'; inp.value=nome;
@@ -567,7 +573,8 @@ function makeNameCell(kind, nome){
   } else {
     const sel = document.createElement('select');
     sel.dataset.kind = kind;
-    sel.innerHTML = '<option value="">— selecionar item do catálogo —</option>'
+    const placeholder = kind==='ataque' ? '— selecionar arma —' : '— selecionar item —';
+    sel.innerHTML = `<option value="">${placeholder}</option>`
       + names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('')
       + '<option value="__custom__">✎ Não está na lista (digitar)</option>';
     if(nome) sel.value = nome;
@@ -585,16 +592,18 @@ function onNameSelect(sel){
     return;
   }
   if(sel.value === '') return;
-  const item = catalogArmas().find(r=>r[0]===sel.value);
-  if(!item) return;
   const others = [...tr.querySelectorAll('td:not(.name-cell) input')];
   if(kind==='ataque'){
+    const item = catalogArmas().find(r=>r[0]===sel.value);
+    if(!item) return;
     if(others[0]) others[0].value = item[2]; // teste
     if(others[1]) others[1].value = item[3]; // dano
     if(others[2]) others[2].value = item[4]; // critico/alcance
   } else if(kind==='inv'){
+    const item = catalogInvItems().find(r=>r[0]===sel.value);
+    if(!item) return;
     if(others[0]) others[0].value = item[1]; // categoria
-    if(others[1]) others[1].value = item[5]; // espaços
+    if(others[1]) others[1].value = item[2]; // espaços
   }
 }
 function addAtaqueRow(values){
@@ -652,10 +661,12 @@ function loadInv(data){
   (data||[]).forEach(r=>addInvRow(r));
 }
 function rebuildAllNameSelects(){
-  const names = catalogNames();
   document.querySelectorAll('#tblAtaques select, #tblInv select').forEach(sel=>{
+    const kind = sel.dataset.kind;
+    const names = kind==='ataque' ? catalogArmaNames() : catalogInvNames();
+    const placeholder = kind==='ataque' ? '— selecionar arma —' : '— selecionar item —';
     const prev = sel.value;
-    sel.innerHTML = '<option value="">— selecionar item do catálogo —</option>'
+    sel.innerHTML = `<option value="">${placeholder}</option>`
       + names.map(n=>`<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('')
       + '<option value="__custom__">✎ Não está na lista (digitar)</option>';
     if(names.includes(prev)) sel.value = prev;
@@ -664,6 +675,7 @@ function rebuildAllNameSelects(){
 function setCatalogStatus(mode){
   const n = catalogArmas().length;
   const el = document.getElementById('catalogStatus');
+  if(!el) return;
   if(mode==='auto') el.textContent = `${n} item(ns) carregados automaticamente de catalogo.json.`;
   else if(mode==='cache') el.textContent = `${n} item(ns) do último catálogo importado (catalogo.json não encontrado nesta pasta — publique-o junto com a ficha).`;
   else if(mode==='manual') el.textContent = `${n} item(ns) carregados manualmente.`;
