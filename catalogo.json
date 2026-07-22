@@ -1,0 +1,278 @@
+{
+  "armas": [
+    [
+      "Faca",
+      "0",
+      "Luta",
+      "1d4",
+      "19 / Curto",
+      "1",
+      "barato"
+    ],
+    [
+      "Punhal",
+      "0",
+      "Luta",
+      "1d4",
+      "x3",
+      "1",
+      "barato"
+    ],
+    [
+      "Bastão",
+      "0",
+      "Luta",
+      "1d6/1d8",
+      "x2",
+      "1",
+      "barato"
+    ],
+    [
+      "Machete",
+      "0",
+      "Luta",
+      "1d6",
+      "19",
+      "1",
+      "barato"
+    ],
+    [
+      "Lança",
+      "0",
+      "Luta",
+      "1d6",
+      "x2 / Curto",
+      "1",
+      "barato"
+    ],
+    [
+      "Machadinha",
+      "I",
+      "Luta",
+      "1d6",
+      "x3 / Curto",
+      "1",
+      "médio"
+    ],
+    [
+      "Espada",
+      "I",
+      "Luta",
+      "1d8/1d10",
+      "19",
+      "1",
+      "médio"
+    ],
+    [
+      "Florete",
+      "I",
+      "Luta",
+      "1d6",
+      "18",
+      "1",
+      "médio"
+    ],
+    [
+      "Machado",
+      "I",
+      "Luta",
+      "1d8",
+      "x3",
+      "1",
+      "médio"
+    ],
+    [
+      "Maça",
+      "I",
+      "Luta",
+      "2d4",
+      "x2",
+      "1",
+      "médio"
+    ],
+    [
+      "Katana",
+      "I",
+      "Luta",
+      "1d10",
+      "19",
+      "2",
+      "alto"
+    ],
+    [
+      "Marreta",
+      "I",
+      "Luta",
+      "3d4",
+      "x2",
+      "2",
+      "médio"
+    ],
+    [
+      "Motosserra",
+      "I",
+      "Luta",
+      "3d6",
+      "x2",
+      "2",
+      "alto"
+    ],
+    [
+      "Arco",
+      "0",
+      "Pontaria",
+      "1d6",
+      "x3 / Médio",
+      "2",
+      "barato"
+    ],
+    [
+      "Arco Composto",
+      "I",
+      "Pontaria",
+      "1d10",
+      "x3 / Médio",
+      "2",
+      "médio"
+    ],
+    [
+      "Balestra",
+      "I",
+      "Pontaria",
+      "1d12",
+      "19 / Médio",
+      "2",
+      "médio"
+    ],
+    [
+      "Shuriken",
+      "I",
+      "Pontaria",
+      "1d4",
+      "x2 / Curto",
+      "1",
+      "barato"
+    ],
+    [
+      "Pistola",
+      "I",
+      "Pontaria",
+      "1d12",
+      "18 / Curto",
+      "1",
+      "médio"
+    ],
+    [
+      "Pistola Pesada",
+      "I",
+      "Pontaria",
+      "2d8",
+      "18 / Curto",
+      "1",
+      "médio"
+    ],
+    [
+      "Revólver",
+      "I",
+      "Pontaria",
+      "2d6",
+      "19-x3 / Curto",
+      "1",
+      "médio"
+    ],
+    [
+      "Submetralhadora",
+      "I",
+      "Pontaria",
+      "2d6",
+      "19-x3 / Curto",
+      "1",
+      "alto"
+    ],
+    [
+      "Fuzil de Caça",
+      "I",
+      "Pontaria",
+      "2d8",
+      "19-x3 / Médio",
+      "2",
+      "alto"
+    ],
+    [
+      "Espingarda",
+      "I",
+      "Pontaria",
+      "4d6",
+      "x3 / Curto",
+      "2",
+      "alto"
+    ],
+    [
+      "Fuzil de Assalto",
+      "II",
+      "Pontaria",
+      "2d10",
+      "19-x3 / Médio",
+      "2",
+      "alto"
+    ],
+    [
+      "Fuzil de Precisão",
+      "III",
+      "Pontaria",
+      "2d10",
+      "19-x3 / Longo",
+      "2",
+      "altíssimo"
+    ],
+    [
+      "Colete Balístico",
+      "I",
+      "—",
+      "— (proteção)",
+      "reduz dano balístico",
+      "2",
+      "médio"
+    ],
+    [
+      "Kit Médico",
+      "0",
+      "Medicina",
+      "—",
+      "—",
+      "1",
+      "barato"
+    ],
+    [
+      "Lanterna",
+      "0",
+      "—",
+      "—",
+      "—",
+      "1",
+      "barato"
+    ],
+    [
+      "Corda (10m)",
+      "0",
+      "—",
+      "—",
+      "—",
+      "1",
+      "barato"
+    ],
+    [
+      "Algemas",
+      "0",
+      "—",
+      "—",
+      "—",
+      "1",
+      "barato"
+    ]
+  ],
+  "equipamentos": [],
+  "rituais": [],
+  "origens": [],
+  "classes": []
+}

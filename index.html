@@ -271,8 +271,10 @@
     <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importJSON(event)">
     <button onclick="window.print()">🖨 Imprimir / PDF</button>
     <button class="danger" onclick="if(confirm('Limpar todos os campos?'))location.reload()">✕ Nova Ficha</button>
+    <button onclick="window.open('catalogo-ordem-paranormal.html','_blank')">📖 Abrir catálogo</button>
     <span class="save-status" id="saveStatus"></span>
   </div>
+  <div class="save-status" id="catalogStatus"></div>
 
   <div class="grid-main">
     <!-- ================= LEFT COLUMN ================= -->
@@ -780,25 +782,7 @@ function setCatalogStatus(mode){
   if(!el) return;
   if(mode==='auto') el.textContent = `${n} item(ns) carregados automaticamente de catalogo.json.`;
   else if(mode==='cache') el.textContent = `${n} item(ns) do último catálogo importado (catalogo.json não encontrado nesta pasta — publique-o junto com a ficha).`;
-  else if(mode==='manual') el.textContent = `${n} item(ns) carregados manualmente.`;
-  else el.textContent = 'Nenhum catálogo encontrado. Publique catalogo.json na mesma pasta da ficha, ou importe manualmente.';
-}
-async function importCatalogFile(ev){
-  const file = ev.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = async ()=>{
-    try{
-      const data = JSON.parse(reader.result);
-      CATALOG = { armas: data.armas||[], equipamentos: data.equipamentos||[], rituais: data.rituais||[], origens: data.origens||[], classes: data.classes||[] };
-      await window.storage.set('op-catalogo', reader.result, false);
-      rebuildAllNameSelects();
-      setCatalogStatus('manual');
-      status('Catálogo importado');
-    }catch(e){ status('JSON inválido'); }
-  };
-  reader.readAsText(file);
-  ev.target.value = '';
+  else el.textContent = '';
 }
 async function autoLoadCatalog(){
   // 1) tenta buscar catalogo.json publicado na mesma pasta (funciona em GitHub Pages / servidor HTTP)

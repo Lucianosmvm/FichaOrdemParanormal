@@ -123,6 +123,7 @@
   <div class="subtitle">Ordem Paranormal — base de dados para usar na Ficha</div>
 
   <div class="toolbar">
+    <button onclick="if(window.opener){window.close()}else{location.href='index.html'}">← Voltar para Ficha</button>
     <button onclick="doSave()">💾 Salvar neste navegador</button>
     <button onclick="exportJSON()">⇩ Exportar catalogo.json</button>
     <button onclick="document.getElementById('importFile').click()">⇧ Importar catalogo.json</button>
