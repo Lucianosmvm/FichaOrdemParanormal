@@ -151,11 +151,11 @@
       </div>
       <div class="table-scroll">
       <table id="tblOrigens">
-        <thead><tr><th style="width:22%">Nome</th><th>Descritivo</th><th></th></tr></thead>
+        <thead><tr><th style="width:18%">Origem</th><th style="width:41%">Perícias treinadas</th><th style="width:31%">Poder</th><th></th></tr></thead>
         <tbody></tbody>
       </table>
       </div>
-      <button class="addbtn" onclick="addRow('tblOrigens',['',''])">+ Adicionar origem</button>
+      <button class="addbtn" onclick="addRow('tblOrigens',['','',''])">+ Adicionar origem</button>
     </div>
 
     <!-- CLASSES -->
@@ -312,26 +312,26 @@ function loadPresetArmas(){
 
 /* referência de origens e classes — valores compilados de fontes da comunidade, confira com seu livro */
 const PRESET_ORIGENS = [
-["Acadêmico","Perícias treinadas: Investigação e Ciências ou Ocultismo. Poder: Escritor Renomado."],
-["Agente de Saúde","Perícias treinadas: Medicina e Vontade ou Profissão. Poder: Instinto de Sobrevivência."],
-["Amnésico","Perícias treinadas: Luta ou Pontaria e Ocultismo. Poder: Bagagem."],
-["Artista","Perícias treinadas: Artes e Enganação ou Intuição. Poder: Aclamação Popular."],
-["Atleta","Perícias treinadas: Atletismo e Acrobacia ou Reflexos. Poder: Sequência de Vitórias."],
-["Chef de Cozinha","Perícias treinadas: Fortitude e Profissão ou Adestramento. Poder: Faca de Chef."],
-["Cientista","Perícias treinadas: Ciências e Investigação ou Tecnologia. Poder: Criação Mirabolante."],
-["Criminoso","Perícias treinadas: Crime e Enganação ou Intimidação. Poder: Golpe Baixo."],
-["Engenheiro","Perícias treinadas: Ciências e Tecnologia ou Profissão. Poder: Fabricação Caseira."],
-["Escritor","Perícias treinadas: Investigação e Artes ou Ocultismo. Poder: Redação Precisa."],
-["Investigador","Perícias treinadas: Investigação e Intuição ou Percepção. Poder: Faro Investigativo."],
-["Lutador","Perícias treinadas: Luta e Fortitude ou Iniciativa. Poder: Artes Marciais."],
-["Mercenário","Perícias treinadas: Pontaria ou Luta e Profissão. Poder: Recompensa."],
-["Militar","Perícias treinadas: Luta ou Pontaria e Tática. Poder: Sob Pressão."],
-["Operário","Perícias treinadas: Atletismo e Fortitude ou Profissão. Poder: Aguenta a Mão."],
-["Policial","Perícias treinadas: Investigação e Pontaria ou Percepção. Poder: Apoio Tático."],
-["Religioso","Perícias treinadas: Religião e Vontade ou Diplomacia. Poder: Fé Inabalável."],
-["Servidor Público","Perícias treinadas: Diplomacia e Profissão ou Investigação. Poder: Conexão Estatal."],
-["Trabalhador Rural","Perícias treinadas: Adestramento e Sobrevivência ou Atletismo. Poder: Vida no Campo."],
-["Vítima","Perícias treinadas: Fortitude e Vontade ou Furtividade. Poder: Instinto de Fuga."]
+["Acadêmico","Investigação e Ciências ou Ocultismo","Escritor Renomado"],
+["Agente de Saúde","Medicina e Vontade ou Profissão","Instinto de Sobrevivência"],
+["Amnésico","Luta ou Pontaria e Ocultismo","Bagagem"],
+["Artista","Artes e Enganação ou Intuição","Aclamação Popular"],
+["Atleta","Atletismo e Acrobacia ou Reflexos","Sequência de Vitórias"],
+["Chef de Cozinha","Fortitude e Profissão ou Adestramento","Faca de Chef"],
+["Cientista","Ciências e Investigação ou Tecnologia","Criação Mirabolante"],
+["Criminoso","Crime e Enganação ou Intimidação","Golpe Baixo"],
+["Engenheiro","Ciências e Tecnologia ou Profissão","Fabricação Caseira"],
+["Escritor","Investigação e Artes ou Ocultismo","Redação Precisa"],
+["Investigador","Investigação e Intuição ou Percepção","Faro Investigativo"],
+["Lutador","Luta e Fortitude ou Iniciativa","Artes Marciais"],
+["Mercenário","Pontaria ou Luta e Profissão","Recompensa"],
+["Militar","Luta ou Pontaria e Tática","Sob Pressão"],
+["Operário","Atletismo e Fortitude ou Profissão","Aguenta a Mão"],
+["Policial","Investigação e Pontaria ou Percepção","Apoio Tático"],
+["Religioso","Religião e Vontade ou Diplomacia","Fé Inabalável"],
+["Servidor Público","Diplomacia e Profissão ou Investigação","Conexão Estatal"],
+["Trabalhador Rural","Adestramento e Sobrevivência ou Atletismo","Vida no Campo"],
+["Vítima","Fortitude e Vontade ou Furtividade","Instinto de Fuga"]
 ];
 const PRESET_CLASSES = [
 ["Combatente","Foco em combate direto. PV por NEX: 5+VIG. Habilidades: Combatente marcial, especialização, acuidade, sob controle, entre outras."],
