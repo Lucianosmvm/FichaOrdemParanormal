@@ -302,7 +302,7 @@
           <div class="field"><label>Classe</label><div id="classeHolder"><input type="text" id="classe" placeholder="ex: Ocultista"></div></div>
         </div>
         <div class="row3">
-          <div class="field"><label>NEX (%)</label><input type="number" id="nex" value="5"></div>
+          <div class="field"><label>NEX (%)</label><input type="number" id="nex" value="5" oninput="rebuildAllNameSelects()"></div>
           <div class="field"><label>PE / Rodada</label><input type="number" id="peRodada" value="0"></div>
           <div class="field"><label>Deslocamento</label><input type="number" id="desl" value="9"></div>
         </div>
@@ -397,7 +397,7 @@
     </div>
     <div class="table-scroll wide">
     <table id="tblHab">
-      <thead><tr><th style="width:26%">Nome</th><th style="width:10%">Custo</th><th style="width:10%">Página</th><th>Descritivo</th><th></th></tr></thead>
+      <thead><tr><th style="width:22%">Nome</th><th style="width:9%">NEX% mín.</th><th style="width:9%">Custo</th><th style="width:9%">Página</th><th>Descritivo</th><th></th></tr></thead>
       <tbody></tbody>
     </table>
     </div>
@@ -568,7 +568,11 @@ function catalogEquip(){ return CATALOG.equipamentos || []; }
 function catalogRituais(){ return CATALOG.rituais || []; }
 function catalogOrigens(){ return CATALOG.origens || []; }
 function catalogClasses(){ return CATALOG.classes || []; }
-function catalogRitualNames(){ return catalogRituais().map(r=>r[0]).filter(Boolean); }
+function parseNexReq(v){ const n = parseInt(String(v||'').replace(/[^0-9]/g,''),10); return isNaN(n)?0:n; }
+function catalogRitualNames(){
+  const max = num('nex');
+  return catalogRituais().filter(r=>parseNexReq(r[1])<=max).map(r=>r[0]).filter(Boolean);
+}
 // itens de inventário normalizados p/ [nome, categoria, espaços]
 function catalogInvItems(){
   return catalogArmas().map(r=>[r[0], r[1], r[5]])
@@ -650,9 +654,10 @@ function onNameSelect(sel){
   } else if(kind==='hab'){
     const item = catalogRituais().find(r=>r[0]===sel.value);
     if(!item) return;
-    if(others[0]) others[0].value = item[1]; // custo (PE)
-    if(others[1]) others[1].value = item[2]; // página
-    if(others[2]) others[2].value = item[3]; // descritivo
+    if(others[0]) others[0].value = item[1]; // NEX% mín.
+    if(others[1]) others[1].value = item[2]; // custo (PE)
+    if(others[2]) others[2].value = item[3]; // página
+    if(others[3]) others[3].value = item[4]; // descritivo
   }
 }
 function addAtaqueRow(values){
@@ -686,11 +691,11 @@ function addInvRow(values){
   tbody.appendChild(tr);
 }
 function addHabRow(values){
-  values = values || ['','','',''];
+  values = values || ['','','','',''];
   const tbody = document.getElementById('tblHab').querySelector('tbody');
   const tr = document.createElement('tr');
   tr.appendChild(makeNameCell('hab', values[0]));
-  [values[1],values[2],values[3]].forEach(v=>{
+  [values[1],values[2],values[3],values[4]].forEach(v=>{
     const td = document.createElement('td');
     const inp = document.createElement('input'); inp.type='text'; inp.value=v||'';
     td.appendChild(inp); tr.appendChild(td);
